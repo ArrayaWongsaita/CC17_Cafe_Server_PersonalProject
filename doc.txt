@@ -25,3 +25,10 @@ Response
   200 accessToKen
   400 message
   500 message
+
+
+--- product --
+
+post /product
+Header
+  Authorization bearer Access_toKen

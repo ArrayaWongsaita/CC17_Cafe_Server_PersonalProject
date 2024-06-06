@@ -1,3 +1,4 @@
+const { date } = require("joi");
 const prisma = require("../models/prisma");
 
 const userService = {};
@@ -5,14 +6,66 @@ const userService = {};
 userService.createUser = (data) => prisma.user.create({ data });
 // userService.createUser = (data) => prisma.user.create({ data:data })
 userService.findUserByEmail = (email) =>
-  prisma.user.findFirst({
+  prisma.user.findFirst({ where: { email } });
+userService.findUserByPhone = (phone) =>
+  prisma.user.findFirst({ where: { phone } });
+
+userService.findUserById = (userId) =>
+  prisma.user.findUnique({ where: { id: userId } });
+
+userService.findCartUserByUserId = (userId) =>
+  prisma.cartItem.findMany({ where: { userId } });
+
+userService.createCartItem = (data) => prisma.cartItem.create({ data });
+
+userService.findCartItembyUserIdAndProductId = (userId, productId) =>
+  prisma.cartItem.findFirst({
     where: {
-       email
+      AND: {
+        userId,
+        productId,
+      },
     },
   });
 
+userService.editAmountInCartItemById = (id, amount) =>
+  prisma.cartItem.update({
+    where: {
+      id,
+    },
+    data: {
+      amount,
+    },
+  });
 
-  userService.findUserById = userId => prisma.user.findUnique({where: {id: userId}})
+userService.removeCartByCardId = (id) =>
+  prisma.cartItem.delete({
+    where: { id },
+  });
+userService.findCartById = (id) => prisma.cartItem.findFirst({ where: { id } });
+
+userService.findCartByUserId = (userId) =>
+  prisma.cartItem.findMany({ where: { userId } });
+
+userService.createOrder = (data) => prisma.order.create({ data });
+userService.createManyOrderItem = (data) =>
+  prisma.orderItem.createMany({
+    data,
+  });
+
+userService.removeManyCartItemByUserId = (userId) =>
+  prisma.cartItem.deleteMany({ where: { userId } });
+
+userService.findOrderByUserId = (userId) =>
+  prisma.order.findMany({ where: { userId } });
 
 
-  module.exports = userService;
+userService.findOrderStatusPendingByUserId = (userId) =>
+  prisma.order.findMany({ where: { 
+    AND: {
+      userId,
+      status: 'Pending'
+    }
+   } });
+
+module.exports = userService;

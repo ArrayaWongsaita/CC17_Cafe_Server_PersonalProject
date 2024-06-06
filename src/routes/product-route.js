@@ -9,6 +9,6 @@ productRouter.get('/',productController.getAllProduct)
 
 productRouter.post('/',authenticate,isAdmin,upload.single('image'),productController.createProduct)
 productRouter.patch('/',authenticate,isAdmin,upload.single('image'),productController.editProduct)
-productRouter.delete('/:id',authenticate,isAdmin,upload.single('image'),productController.deleteProduct)
+productRouter.delete('/:id',authenticate,isAdmin ,productController.deleteProduct)
 
 module.exports = productRouter

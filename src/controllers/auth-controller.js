@@ -9,14 +9,24 @@ const authController = {};
 authController.register = async (req, res, next) => {
   try {
     const data = req.input;
-    const existUser = await userService.findUserByEmail(data.email);
+    const existUser = await userService.findUserByEmail(data?.email);
     if (existUser) {
       createError({
-        message: "email or mobile already in use ",
-        field: "emailOrMobile",
+        message: "email already in use ",
+        field: "email",
         statusCode: 400,
       });
     }
+    const checkPhone = await userService.findUserByPhone(data?.phone);
+    if (checkPhone) {
+      createError({
+        message: "phone already in use ",
+        field: "phone",
+        statusCode: 400,
+      });
+    }
+
+
     data.password = await hashService.hash(data.password);
     await userService.createUser(data);
     res.status(201).json({ message: "user created" });

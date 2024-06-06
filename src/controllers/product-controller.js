@@ -136,7 +136,7 @@ productController.deleteProduct = async (req, res, next ) => {
         statusCode: 400,
       })
     }
-     const massage = await productService.dropColumnById(+req.body?.id)
+     const massage = await productService.dropColumnById(+req.params.id)
 
     res.status(200).json()
   } catch (error) {
