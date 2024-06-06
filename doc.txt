@@ -1,0 +1,27 @@
+--- register
+post /auth/register
+body 
+  firstName
+  lastName
+  email
+  passWord
+  confirmPassword
+  address
+  phone
+
+
+Response
+  200 message
+  400 message
+  500 message
+
+
+--- Login
+post /auth/login
+body
+  email
+  passWord
+Response
+  200 accessToKen
+  400 message
+  500 message
