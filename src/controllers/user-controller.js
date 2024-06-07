@@ -3,6 +3,7 @@ const uploadService = require("../services/upload-service")
 const userService = require("../services/user-service")
 const createError = require("../utils/create-error")
 const fs = require('fs/promises')
+const sentLineMassage = require("../services/lineNotify-service")
 
 const userController = {}
 
@@ -99,7 +100,7 @@ userController.postOrder = async (req, res, next) => {
     const order = await userService.createOrder(data)
 
 
-    console.log(order)
+
     const orderItemData = cartUser.map(item => ({
       productId: item.productId,
       amount: item.amount,
@@ -108,6 +109,7 @@ userController.postOrder = async (req, res, next) => {
 
     const orderItem = await userService.createManyOrderItem(orderItemData)
     const result2 = await userService.removeManyCartItemByUserId(req.user.id)
+    await sentLineMassage(order,req.file?.path,cartUser)
 
     res.status(200).json({message:"Succeed"})
   } catch (error) {

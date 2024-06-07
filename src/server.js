@@ -9,6 +9,8 @@ const productRouter = require('./routes/product-route');
 const errorMiddleware = require('./middlewares/error');
 const notFoundMiddleware = require('./middlewares/not-found');
 const userRouter = require('./routes/user-route');
+const isAdmin = require('./middlewares/isAdmin');
+const adminRouter = require('./routes/admin-rote');
 
 
 const app = express();
@@ -24,6 +26,7 @@ app.use(express.json());
 app.use('/auth', authRouter)
 app.use('/product',productRouter)
 app.use("/user", userRouter)
+app.use("/admin",authenticate,isAdmin,adminRouter)
 
 
 app.use(errorMiddleware)
