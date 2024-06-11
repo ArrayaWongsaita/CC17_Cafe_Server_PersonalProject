@@ -24,7 +24,7 @@ productService.createProduct = (data) => prisma.product.create({
 })
 
 
-productService.upDataProductByIdAndData = (id, data) => prisma.product.updateMany({
+productService.upDataProductByIdAndData = (id, data) => prisma.product.update({
   where: {id},
   data
 })

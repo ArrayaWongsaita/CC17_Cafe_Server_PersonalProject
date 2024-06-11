@@ -12,6 +12,8 @@ userRouter.patch("/",authenticate,userController.editCart)
 userRouter.delete("/:cartId",authenticate,userController.removeCart)
 userRouter.post("/order",authenticate,upload.single('slipImage'),userController.postOrder)
 userRouter.get("/order",authenticate,userController.getAllOrder)
+userRouter.get("/order/detail/:orderId",authenticate,userController.getOrderDetail)
 userRouter.get("/order/pending",authenticate,userController.getPendingOrder)
+userRouter.get("/order/me",authenticate,userController.getAllOrderUser)
 
 module.exports = userRouter;

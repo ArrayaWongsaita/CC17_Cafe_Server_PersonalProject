@@ -27,6 +27,7 @@ userController.createCart = async (req, res, next) => {
     const checkData = await userService.findCartItembyUserIdAndProductId(+req.user.id,req.body?.productId)
     if(checkData){
       const data = await userService.editAmountInCartItemById(checkData.id,(req.body.amount + checkData.amount))
+      console.log(data)
       return res.status(200).json({...data})
     }
     const data = {...req.body ,userId:+req.user.id}
@@ -132,9 +133,38 @@ userController.getAllOrder = async (req, res, next) => {
     next(error)
   }
 }
+userController.getOrderDetail = async (req, res, next) => {
+  try {
+  
+    const orderUser = await userService.findOrderItemByOrderId(+req.params.orderId)
+    const allProduct = await userService.getAllProduct()
+
+    const data = orderUser.map(item =>{
+      item.productDetail = allProduct.find(product => product.id === item.productId )
+      return item
+    })
+
+
+    
+    res.status(200).json(data)
+    
+  } catch (error) {
+    next(error)
+  }
+}
 userController.getPendingOrder = async (req, res, next) => {
   try {
     const pendingOrder = await userService.findOrderStatusPendingByUserId(+req.user?.id)
+    res.status(200).json(pendingOrder)
+    
+  } catch (error) {
+    next(error)
+  }
+}
+
+userController.getAllOrderUser = async (req, res, next) => {
+  try {
+    const pendingOrder = await userService.findOrderByUserId(+req.user?.id)
     res.status(200).json(pendingOrder)
     
   } catch (error) {

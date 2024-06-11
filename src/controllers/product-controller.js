@@ -9,12 +9,14 @@ const productController = {}
 productController.getAllProduct = async (req, res, next ) => {
   try {
     const result = await productService.getAllProduct()
-    const resultFilter = result.filter(item => item.isShow === true)
-    const products = resultFilter.map(item => {
-      delete item.isShow
-      return item
-    })
-    res.status(200).json({products})
+    // console.log("------------------------------------------------",result)
+    // const resultFilter = result.filter(item => item.isShow === true)
+    // const products = resultFilter.map(item => {
+    //   delete item.isShow
+    //   return item
+    // })
+
+    res.status(200).json({products:result})
   } catch (error) {
     next(error)
   }
@@ -59,7 +61,9 @@ productController.createProduct = async (req, res, next ) => {
 
 productController.editProduct = async (req, res, next ) => {
   try {
-    if(Object.keys(req?.body).length < 2 || !req.body?.id ){
+    console.log(req?.file)
+    console.log(req.body?.id)
+    if((Object.keys(req?.body).length < 2 && !req?.file) || !req.body?.id ){
       createError({
         message: "Incomplete information ",
         statusCode: 400,
@@ -99,10 +103,11 @@ productController.editProduct = async (req, res, next ) => {
     }
     const id = +data.id
     delete data.id
-    const {count} = await productService.upDataProductByIdAndData(id,data)
+    const result = await productService.upDataProductByIdAndData(id,data)
 
-    if(count){
-      res.status(200).json({massage:"Edit successful"})
+    if(result){
+      console.log(result)
+      res.status(200).json({...result})
     }else{
       res.status(400).json({massage:"Id is not found"})
     }

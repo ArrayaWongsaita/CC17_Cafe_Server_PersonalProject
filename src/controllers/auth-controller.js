@@ -59,10 +59,28 @@ authController.login = async (req, res, next) => {
     console.log(existUser)
     delete existUser.password
     const accessToken = jwtService.sign({ id: existUser.id });
-    res.status(200).json({ ...existUser,accessToken });
+    res.status(200).json({ accessToken });
   } catch (error) {
     next(error);
   }
 };
+authController.getMe = async (req, res, next) => {
+  try {
+    const existUser = await userService.findUserById(req.user.id)
+
+    if (!existUser) {
+      createError({
+        message: "Invalid Credentials",
+
+        statusCode: 400,
+      });
+    }
+    delete existUser.password
+    res.status(200).json(existUser)
+    
+  } catch (error) {
+    next(error)
+  }
+}
 
 module.exports = authController;

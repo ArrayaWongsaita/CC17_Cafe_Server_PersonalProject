@@ -5,6 +5,7 @@ const userService = {};
 
 userService.createUser = (data) => prisma.user.create({ data });
 // userService.createUser = (data) => prisma.user.create({ data:data })
+
 userService.findUserByEmail = (email) =>
   prisma.user.findFirst({ where: { email } });
 userService.findUserByPhone = (phone) =>
@@ -59,7 +60,7 @@ userService.removeManyCartItemByUserId = (userId) =>
 userService.findOrderByUserId = (userId) =>
   prisma.order.findMany({ where: { userId } });
 
-
+userService.findOrderItemByOrderId = orderId => prisma.orderItem.findMany({where:{orderId}})
 userService.findOrderStatusPendingByUserId = (userId) =>
   prisma.order.findMany({ where: { 
     AND: {
@@ -67,5 +68,7 @@ userService.findOrderStatusPendingByUserId = (userId) =>
       status: 'Pending'
     }
    } });
+
+userService.getAllProduct = () => prisma.product.findMany({})
 
 module.exports = userService;
