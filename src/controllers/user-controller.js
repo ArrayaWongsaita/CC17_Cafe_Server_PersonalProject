@@ -141,7 +141,7 @@ userController.postOrder = async (req, res, next) => {
 }
 userController.getAllOrder = async (req, res, next) => {
   try {
-    const orderUser = await userService.findOrderByUserId(+req.user?.id)
+    const orderUser = await userService.getAllOrder()
     res.status(200).json(orderUser)
     
   } catch (error) {

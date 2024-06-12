@@ -70,5 +70,6 @@ userService.findOrderStatusPendingByUserId = (userId) =>
    } });
 
 userService.getAllProduct = () => prisma.product.findMany({})
+userService.getAllOrder = () =>prisma.order.findMany({})
 
 module.exports = userService;
