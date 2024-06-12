@@ -10,7 +10,12 @@ const userController = {}
 userController.getCart = async (req, res, next) => {
   try {
     const cartUser = await userService.findCartUserByUserId(+req.user.id)
-    res.status(200).json(cartUser)
+    const allProduct = await userService.getAllProduct()
+    const data = cartUser.map(item =>{
+      item.productDetail = allProduct.find(product => product.id === item.productId )
+      return item
+    })
+    res.status(200).json(data)
   } catch (error) {
     next(error)
   }
@@ -27,13 +32,21 @@ userController.createCart = async (req, res, next) => {
     const checkData = await userService.findCartItembyUserIdAndProductId(+req.user.id,req.body?.productId)
     if(checkData){
       const data = await userService.editAmountInCartItemById(checkData.id,(req.body.amount + checkData.amount))
-      console.log(data)
-      return res.status(200).json({...data})
+      const allProduct = await userService.getAllProduct()
+      data.productDetail = allProduct.find(product => product.id === data.productId)
+      
+      res.status(200).json(data)
     }
-    const data = {...req.body ,userId:+req.user.id}
-    const result = await userService.createCartItem(data)
-    console.log(result)
-    res.status(200).json({...result})
+    const input = {...req.body ,userId:+req.user.id}
+    const data = await userService.createCartItem(input)
+    const allProduct = await userService.getAllProduct()
+    data.productDetail = allProduct.find(product => product.id === data.productId)
+    
+    res.status(200).json(data)
+
+    
+    
+
   } catch (error) {
     next(error)
   }
@@ -56,6 +69,8 @@ userController.editCart = async (req, res, next) => {
       })
     }
     const data = await userService.editAmountInCartItemById(checkData.id,(req.body.amount))
+    const allProduct = await userService.getAllProduct()
+    data.productDetail = allProduct.find(product => product.id === data.productId)
     res.status(200).json({...data})
 
   } catch (error) {
@@ -112,7 +127,7 @@ userController.postOrder = async (req, res, next) => {
     const result2 = await userService.removeManyCartItemByUserId(req.user.id)
     await sentLineMassage(order,req.file?.path,cartUser)
 
-    res.status(200).json({message:"Succeed"})
+    res.status(200).json({...order})
   } catch (error) {
     next(error)
   }    finally {
