@@ -1,18 +1,17 @@
-const createError = require("../utils/create-error")
+const createError = require("../utils/create-error");
 
 const isAdmin = (req, res, next) => {
   try {
-    if(req.user.isAdmin === false){
+    if (req.user.isAdmin === false) {
       createError({
-        message: 'this id is not Admin',
-         statusCode: 403
-      })
+        message: "this id is not Admin",
+        statusCode: 403,
+      });
     }
-    next()
-    
+    next();
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
-module.exports = isAdmin
+module.exports = isAdmin;

@@ -3,11 +3,19 @@ const prisma = require("../models/prisma");
 
 const userService = {};
 
+userService.updateUserProfileByUserIdAndData = (id, data) =>
+  prisma.user.update({
+    where: {
+      id: id,
+    },
+    data: data,
+  });
+
 userService.createUser = (data) => prisma.user.create({ data });
-// userService.createUser = (data) => prisma.user.create({ data:data })
 
 userService.findUserByEmail = (email) =>
   prisma.user.findFirst({ where: { email } });
+
 userService.findUserByPhone = (phone) =>
   prisma.user.findFirst({ where: { phone } });
 
@@ -60,16 +68,19 @@ userService.removeManyCartItemByUserId = (userId) =>
 userService.findOrderByUserId = (userId) =>
   prisma.order.findMany({ where: { userId } });
 
-userService.findOrderItemByOrderId = orderId => prisma.orderItem.findMany({where:{orderId}})
+userService.findOrderItemByOrderId = (orderId) =>
+  prisma.orderItem.findMany({ where: { orderId } });
 userService.findOrderStatusPendingByUserId = (userId) =>
-  prisma.order.findMany({ where: { 
-    AND: {
-      userId,
-      status: 'Pending'
-    }
-   } });
+  prisma.order.findMany({
+    where: {
+      AND: {
+        userId,
+        status: "Pending",
+      },
+    },
+  });
 
-userService.getAllProduct = () => prisma.product.findMany({})
-userService.getAllOrder = () =>prisma.order.findMany({})
+userService.getAllProduct = () => prisma.product.findMany({});
+userService.getAllOrder = () => prisma.order.findMany({});
 
 module.exports = userService;

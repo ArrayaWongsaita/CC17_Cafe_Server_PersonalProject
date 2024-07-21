@@ -1,12 +1,10 @@
-const cloudinary = require('../config/cloudinary')
+const cloudinary = require("../config/cloudinary");
 
+const removeService = {};
 
-const removeService = {}
-
-
-removeService.remove = async path => {
-  const result = await cloudinary.uploader.destroy(path)
-  return result
+removeService.remove = async (path) => {
+  const result = await cloudinary.uploader.destroy(path);
+  return result;
 };
 
-module.exports = removeService
+module.exports = removeService;

@@ -26,7 +26,6 @@ authController.register = async (req, res, next) => {
       });
     }
 
-
     data.password = await hashService.hash(data.password);
     await userService.createUser(data);
     res.status(201).json({ message: "user created" });
@@ -56,8 +55,8 @@ authController.login = async (req, res, next) => {
         statusCode: 400,
       });
     }
-    console.log(existUser)
-    delete existUser.password
+    console.log(existUser);
+    delete existUser.password;
     const accessToken = jwtService.sign({ id: existUser.id });
     res.status(200).json({ accessToken });
   } catch (error) {
@@ -66,7 +65,7 @@ authController.login = async (req, res, next) => {
 };
 authController.getMe = async (req, res, next) => {
   try {
-    const existUser = await userService.findUserById(req.user.id)
+    const existUser = await userService.findUserById(req.user.id);
 
     if (!existUser) {
       createError({
@@ -75,12 +74,11 @@ authController.getMe = async (req, res, next) => {
         statusCode: 400,
       });
     }
-    delete existUser.password
-    res.status(200).json(existUser)
-    
+    delete existUser.password;
+    res.status(200).json(existUser);
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
 
 module.exports = authController;

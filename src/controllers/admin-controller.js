@@ -23,43 +23,42 @@ adminController.getAllPendingOrder = async (req, res, next) => {
 };
 adminController.editOrder = async (req, res, next) => {
   try {
-  
     if (
       !req.body?.orderId ||
-      !(req.body?.address ||
+      !(
+        req.body?.address ||
         req.body?.phone ||
         req.body?.firstName ||
         req.body?.lastName ||
         req.file?.path ||
-        req.body?.price)
-    ){
+        req.body?.price
+      )
+    ) {
       createError({
         message: "Incomplete information ",
         statusCode: 400,
-      })
+      });
     }
-    const data = req.body
+    const data = req.body;
 
-    if(data.price) data.price = +data.price
-    if(req?.file){
-      req.oldImage = await adminService.findSlipImageByOrderId(+data.orderId)
+    if (data.price) data.price = +data.price;
+    if (req?.file) {
+      req.oldImage = await adminService.findSlipImageByOrderId(+data.orderId);
 
-      console.log(req.oldImage)
-      data.slipImage = await uploadService.upload(req.file?.path)
+      console.log(req.oldImage);
+      data.slipImage = await uploadService.upload(req.file?.path);
     }
-    const orderId = +data.orderId
-    delete data.orderId 
-    console.log(data)
-    console.log(orderId)
-    const result = await adminService.editOrderByOrderId(orderId,data)
+    const orderId = +data.orderId;
+    delete data.orderId;
+    console.log(data);
+    console.log(orderId);
+    const result = await adminService.editOrderByOrderId(orderId, data);
 
-
-      res.status(200).json(result);
+    res.status(200).json(result);
   } catch (error) {
     next(error);
   } finally {
     if (req.file) {
-
       fs.unlink(req.file.path);
     }
     if (req?.oldImage) {
